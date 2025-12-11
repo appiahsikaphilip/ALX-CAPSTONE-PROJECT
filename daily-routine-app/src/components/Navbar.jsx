@@ -1,7 +1,7 @@
 export default function Navbar() {
   return (
-    <nav className="bg-blue-600 p-4 text-white font-bold text-xl">
-      Daily Routine App
+    <nav className="bg-blue-600 text-white px-6 py-4">
+      <h1 className="text-xl font-bold">Daily Routine App</h1>
     </nav>
   );
 }

@@ -1,39 +1,54 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 
-function App() {
+export default function App() {
   const [tasks, setTasks] = useState([]);
 
-  // Load from local storage on first load
+  // Load tasks from Local Storage
   useEffect(() => {
     const savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
     setTasks(savedTasks);
   }, []);
 
-  // Save to local storage when tasks change
+  // Save tasks to Local Storage anytime tasks update
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
-  const addTask = (task) => {
-    setTasks((prev) => [...prev, task]);
+  const addTask = (newTask) => {
+    setTasks([...tasks, newTask]);
   };
 
-  const deleteTask = (index) => {
-    setTasks((prev) => prev.filter((_, i) => i !== index));
+  const updateTask = (updatedTask) => {
+    setTasks(tasks.map(task => task.id === updatedTask.id ? updatedTask : task));
+  };
+
+  const deleteTask = (id) => {
+    setTasks(tasks.filter(task => task.id !== id));
+  };
+
+  const toggleComplete = (id) => {
+    setTasks(
+      tasks.map(task =>
+        task.id === id ? { ...task, completed: !task.completed } : task
+      )
+    );
   };
 
   return (
     <div className="min-h-screen bg-gray-100">
       <Navbar />
-      <div className="max-w-xl mx-auto p-4">
+      <div className="max-w-2xl mx-auto p-4">
         <TaskForm addTask={addTask} />
-        <TaskList tasks={tasks} deleteTask={deleteTask} />
+        <TaskList
+          tasks={tasks}
+          updateTask={updateTask}
+          deleteTask={deleteTask}
+          toggleComplete={toggleComplete}
+        />
       </div>
     </div>
   );
 }
-
-export default App;
